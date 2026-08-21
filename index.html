@@ -1,0 +1,780 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Итоги мини-синка по нейронкам</title>
+  <style>
+    :root {
+      --bg: #f6f0e8;
+      --paper: #fffaf2;
+      --card: #ffffff;
+      --ink: #211d19;
+      --muted: #6d645b;
+      --line: #ded3c6;
+      --rose: #b7635d;
+      --orange: #d88b55;
+      --sage: #768a6b;
+      --blue: #5f788c;
+      --violet: #82728a;
+      --sand: #eadcc9;
+      --shadow: 0 18px 45px rgba(59, 43, 30, .10);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      margin: 0;
+      background:
+        radial-gradient(circle at 8% 4%, rgba(216, 139, 85, .18), transparent 30%),
+        radial-gradient(circle at 92% 0%, rgba(95, 120, 140, .14), transparent 32%),
+        var(--bg);
+      color: var(--ink);
+      font-family: Inter, Arial, Helvetica, sans-serif;
+      line-height: 1.45;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .page {
+      width: min(1180px, calc(100% - 32px));
+      margin: 0 auto;
+      padding: 28px 0 56px;
+    }
+
+    .hero {
+      min-height: 420px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, .8fr);
+      gap: 28px;
+      align-items: stretch;
+      padding: 34px;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      background: rgba(255, 250, 242, .86);
+      box-shadow: var(--shadow);
+    }
+
+    .eyebrow {
+      margin: 0 0 18px;
+      color: var(--rose);
+      font-size: 13px;
+      font-weight: 800;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      max-width: 780px;
+      margin: 0;
+      font-size: clamp(42px, 6vw, 78px);
+      line-height: .98;
+      letter-spacing: 0;
+    }
+
+    .lead {
+      max-width: 760px;
+      margin: 22px 0 0;
+      color: var(--muted);
+      font-size: clamp(18px, 2vw, 24px);
+    }
+
+    .hero-panel {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 24px;
+      border-radius: 14px;
+      background: #efe3d3;
+    }
+
+    .hero-panel strong {
+      display: block;
+      max-width: 300px;
+      font-size: 27px;
+      line-height: 1.08;
+    }
+
+    .stats {
+      display: grid;
+      gap: 10px;
+      margin-top: 24px;
+    }
+
+    .stat {
+      display: grid;
+      grid-template-columns: 48px 1fr;
+      gap: 12px;
+      align-items: center;
+      padding: 12px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .64);
+    }
+
+    .stat b {
+      display: grid;
+      place-items: center;
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      background: var(--ink);
+      color: white;
+      font-size: 22px;
+    }
+
+    .stat span {
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .nav {
+      position: sticky;
+      top: 0;
+      z-index: 5;
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin: 18px 0 34px;
+      padding: 12px;
+      border: 1px solid var(--line);
+      border-radius: 16px;
+      background: rgba(246, 240, 232, .92);
+      backdrop-filter: blur(14px);
+    }
+
+    .nav a {
+      padding: 10px 14px;
+      border-radius: 999px;
+      background: var(--paper);
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 750;
+      text-decoration: none;
+    }
+
+    .nav a:hover {
+      background: var(--ink);
+      color: white;
+    }
+
+    section {
+      margin-top: 36px;
+      scroll-margin-top: 84px;
+    }
+
+    .section-head {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(260px, 380px);
+      gap: 28px;
+      align-items: end;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      margin: 0;
+      font-size: clamp(34px, 4vw, 52px);
+      line-height: 1;
+      letter-spacing: 0;
+    }
+
+    .section-note {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .grid.two {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .card {
+      min-height: 224px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      padding: 22px;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: 0 10px 28px rgba(50, 38, 29, .06);
+    }
+
+    .card.compact {
+      min-height: 178px;
+    }
+
+    .card.wide {
+      grid-column: span 2;
+    }
+
+    .tag {
+      width: fit-content;
+      padding: 6px 10px;
+      border-radius: 999px;
+      color: white;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: .04em;
+      text-transform: uppercase;
+    }
+
+    .tag.rose { background: var(--rose); }
+    .tag.orange { background: var(--orange); }
+    .tag.sage { background: var(--sage); }
+    .tag.blue { background: var(--blue); }
+    .tag.violet { background: var(--violet); }
+    .tag.dark { background: var(--ink); }
+
+    h3 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.1;
+      letter-spacing: 0;
+    }
+
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 17px;
+    }
+
+    .card ul {
+      display: grid;
+      gap: 8px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    .card li {
+      position: relative;
+      padding-left: 18px;
+    }
+
+    .card li::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      top: .62em;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--rose);
+    }
+
+    .quote {
+      margin-top: auto;
+      padding-top: 14px;
+      border-top: 1px solid var(--line);
+      color: var(--ink);
+      font-size: 15px;
+      font-weight: 750;
+    }
+
+    .table-card {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: 0 10px 28px rgba(50, 38, 29, .06);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    th,
+    td {
+      padding: 16px 18px;
+      border-bottom: 1px solid var(--line);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    th {
+      color: var(--rose);
+      font-size: 13px;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+    }
+
+    td {
+      color: var(--muted);
+      font-size: 16px;
+    }
+
+    td:first-child {
+      color: var(--ink);
+      font-weight: 800;
+    }
+
+    tr:last-child td {
+      border-bottom: 0;
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: .95fr 1.05fr;
+      gap: 14px;
+    }
+
+    .callout {
+      padding: 28px;
+      border-radius: 16px;
+      background: var(--ink);
+      color: white;
+    }
+
+    .callout h3 {
+      max-width: 700px;
+      font-size: clamp(30px, 4vw, 46px);
+    }
+
+    .callout p {
+      max-width: 760px;
+      margin: 18px 0 0;
+      color: rgba(255, 255, 255, .74);
+      font-size: 20px;
+    }
+
+    .mini {
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 12px;
+      margin-top: 14px;
+    }
+
+    .mini-card {
+      padding: 16px;
+      border-radius: 12px;
+      background: rgba(255, 255, 255, .10);
+      color: rgba(255, 255, 255, .82);
+      font-size: 15px;
+    }
+
+    .mini-card b {
+      display: block;
+      margin-bottom: 8px;
+      color: white;
+      font-size: 17px;
+    }
+
+    .footer {
+      margin-top: 40px;
+      padding: 22px 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    @media (max-width: 920px) {
+      .hero,
+      .section-head,
+      .split {
+        grid-template-columns: 1fr;
+      }
+
+      .grid,
+      .grid.two,
+      .mini {
+        grid-template-columns: 1fr;
+      }
+
+      .card.wide {
+        grid-column: span 1;
+      }
+
+      .hero {
+        padding: 24px;
+      }
+
+      table,
+      tbody,
+      tr,
+      td,
+      th {
+        display: block;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tr {
+        border-bottom: 1px solid var(--line);
+      }
+
+      tr:last-child {
+        border-bottom: 0;
+      }
+
+      td {
+        border: 0;
+        padding: 10px 16px;
+      }
+
+      td:first-child {
+        padding-top: 16px;
+      }
+
+      td:last-child {
+        padding-bottom: 16px;
+      }
+    }
+
+    @media print {
+      body {
+        background: white;
+      }
+
+      .nav {
+        position: static;
+      }
+
+      .card,
+      .table-card,
+      .hero {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="hero">
+      <div>
+        <p class="eyebrow">Итоги мини-синка команды</p>
+        <h1>Нейронки в работе продукта</h1>
+        <p class="lead">Какие инструменты используем, что узнали нового, где уже применяем и какие боли увидели.</p>
+      </div>
+      <aside class="hero-panel" aria-label="Короткий итог встречи">
+        <strong>Главный вывод встречи</strong>
+        <p>Нейронки уже помогают не только писать тексты, но и собирать структуру, HTML, аналитику, ТЗ, планы и рутинные операции. Качество появляется не с первого запроса, а через контекст, вопросы и проверку человеком.</p>
+        <div class="stats">
+          <div class="stat"><b>4</b><span>блока: новое, задачи, блокеры, решения</span></div>
+          <div class="stat"><b>8</b><span>основных типов задач уже звучали на синке</span></div>
+          <div class="stat"><b>1</b><span>общее правило: не выпускать без проверки</span></div>
+        </div>
+      </aside>
+    </header>
+
+    <nav class="nav" aria-label="Навигация по странице">
+      <a href="#new">Что узнали</a>
+      <a href="#tasks">Топ задач</a>
+      <a href="#blockers">Боли и блокеры</a>
+      <a href="#solutions">Идеи решений</a>
+    </nav>
+
+    <section id="tools">
+      <div class="section-head">
+        <h2>Какие нейронки используем</h2>
+        <p class="section-note">Инструменты, которые упоминались на встрече, и для каких задач они уже пригодились.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <span class="tag rose">Основной инструмент</span>
+          <h3>ChatGPT</h3>
+          <p>Тексты, структура, расшифровки, идеи, документы, изображения, HTML и работа с файлами.</p>
+        </article>
+
+        <article class="card">
+          <span class="tag blue">Файлы и код</span>
+          <h3>Codex</h3>
+          <p>HTML, GitHub, локальные файлы, браузер и задачи, где нужно не только обсудить, но и собрать результат.</p>
+        </article>
+
+        <article class="card">
+          <span class="tag sage">Telegram</span>
+          <h3>AI Just</h3>
+          <p>Управление чатами, отложенные сообщения, опросы, аналитика и работа с данными во внутренних системах.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag orange">Тексты и анализ</span>
+          <h3>DeepSeek и Claude</h3>
+          <p>Альтернативы для текстов, больших документов, объяснений, SEO и быстрых подсчётов.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag violet">Изображения</span>
+          <h3>Gemini / Nano Banana</h3>
+          <p>Быстрые правки изображений, работа с палитрой и визуальные варианты.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag dark">Медиа</span>
+          <h3>ElevenLabs, Seedance и Higgsfield</h3>
+          <p>Озвучка, короткие видео и эксперименты с медийным контентом.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="new">
+      <div class="section-head">
+        <h2>Что узнали нового</h2>
+        <p class="section-note">Не теория про ИИ, а реальные наблюдения команды после экспериментов в работе.</p>
+      </div>
+      <div class="grid">
+        <article class="card">
+          <span class="tag rose">Инсайт</span>
+          <h3>Не обязательно метаться между нейронками</h3>
+          <p>Одна хорошо освоенная нейронка начинает лучше понимать стиль, задачи и контекст. Это снижает хаос от постоянных переключений.</p>
+          <div class="quote">Практический смысл: выбрать основной инструмент и накапливать в нём рабочий контекст.</div>
+        </article>
+
+        <article class="card">
+          <span class="tag blue">Инсайт</span>
+          <h3>ChatGPT закрыл часть отдельных инструментов</h3>
+          <p>Команда уже использует его для текстов, HTML, GitHub, документов, идей, картинок и работы с файлами.</p>
+          <div class="quote">Смысл: сначала проверить, закрывается ли задача текущим стеком, и только потом искать новый сервис.</div>
+        </article>
+
+        <article class="card">
+          <span class="tag sage">Инсайт</span>
+          <h3>Планирование до выполнения сильно повышает качество</h3>
+          <p>Лучше сначала попросить нейронку задать вопросы, уточнить рамки и согласовать план, а не сразу отдавать задачу в производство.</p>
+          <div class="quote">Смысл: режим “сначала обсуди” экономит правки на выходе.</div>
+        </article>
+
+        <article class="card">
+          <span class="tag orange">Инсайт</span>
+          <h3>Голосовой ввод стал рабочим способом ставить задачи</h3>
+          <p>Голосом быстрее дать много контекста, описать ситуацию, правки, ограничения и ощущение от результата.</p>
+          <div class="quote">Смысл: не ждать идеального промпта, а надиктовать задачу как живому помощнику.</div>
+        </article>
+
+        <article class="card">
+          <span class="tag violet">Инсайт</span>
+          <h3>ИИ полезен не только для креатива, но и для рутины</h3>
+          <p>На встрече звучали скриншоты, планы недель, переносы, массовые правки, обложки, выгрузки и аналитика.</p>
+          <div class="quote">Смысл: искать не только “вау-кейсы”, но и задачи, которые просто бесят.</div>
+        </article>
+
+        <article class="card">
+          <span class="tag dark">Инсайт</span>
+          <h3>ИИ ускоряет, но может перегружать</h3>
+          <p>Генерации разгоняют креатив и создают ощущение, что можно вести несколько процессов одновременно. Для живого мозга это дорого.</p>
+          <div class="quote">Смысл: ставить стоп-точки и не превращать вечер в бесконечную итерацию.</div>
+        </article>
+      </div>
+    </section>
+
+    <section id="tasks">
+      <div class="section-head">
+        <h2>Топ задач</h2>
+        <p class="section-note">Где команда уже использует нейронки или явно видит пользу после синка.</p>
+      </div>
+      <div class="table-card">
+        <table>
+          <thead>
+            <tr>
+              <th>Задача</th>
+              <th>Что отдаём на вход</th>
+              <th>Что получаем</th>
+              <th>Кто проверяет</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Тексты</td>
+              <td>Тезисы, контекст недели, бриф, TOV, ограничения</td>
+              <td>Анонсы, подводки, технические тексты, SEO-описания, черновики для курса</td>
+              <td>Автор, редактор, ответственный за продукт</td>
+            </tr>
+            <tr>
+              <td>HTML и интерактивы</td>
+              <td>Документы, структура материала, дизайн-решения, палитра, примеры</td>
+              <td>HTML-материал, который можно открыть в браузере и залить на GitHub</td>
+              <td>Автор материала, дизайнер при необходимости, тестер</td>
+            </tr>
+            <tr>
+              <td>Структурирование хаоса</td>
+              <td>Голосовой поток, заметки, расшифровка встречи, длинный документ</td>
+              <td>Сводка, структура, список решений, различия, следующие шаги</td>
+              <td>Тот, кто ставил задачу</td>
+            </tr>
+            <tr>
+              <td>Расшифровки и сбор материалов</td>
+              <td>Аудио, ссылка, текстовая расшифровка, задача на выход</td>
+              <td>Выжимка, материал, план, чек-лист, вопросы</td>
+              <td>Автор, редактор</td>
+            </tr>
+            <tr>
+              <td>Идеи и ТЗ</td>
+              <td>Неделя курса, тема, аудитория, ограничения формата</td>
+              <td>Идеи инфографик, ТЗ дизайнеру, план подкаста, варианты визуала</td>
+              <td>Методолог, редактор, дизайнер</td>
+            </tr>
+            <tr>
+              <td>Аналитика и гипотезы</td>
+              <td>Доступ к данным, параметры запроса, период, метрика</td>
+              <td>Продажи, конверсии, сравнения, быстрые гипотезы</td>
+              <td>Продакт, аналитик или владелец метрики</td>
+            </tr>
+            <tr>
+              <td>Операционная рутина</td>
+              <td>Таблица, список задач, запись встречи, инструкция</td>
+              <td>Планы недель, планы месяца, переносы, скриншоты, массовые правки</td>
+              <td>Ответственный за процесс</td>
+            </tr>
+            <tr>
+              <td>Визуал, видео, звук</td>
+              <td>Референсы, палитра, исходники, текст озвучки, сценарий</td>
+              <td>Озвучка, короткое видео, картинка, правка палитры, обложка</td>
+              <td>Дизайнер, продюсер, автор задачи</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="blockers">
+      <div class="section-head">
+        <h2>Боли и блокеры</h2>
+        <p class="section-note">Что мешает использовать нейронки спокойно и почему результат нельзя принимать на веру.</p>
+      </div>
+      <div class="grid">
+        <article class="card compact">
+          <span class="tag rose">Визуал</span>
+          <h3>Качество изображений нестабильно</h3>
+          <p>Фото может стать мыльным, правки ломают результат, после нескольких итераций модель хуже держит пожелания.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag rose">Визуал</span>
+          <h3>Текст на картинках может ломаться</h3>
+          <p>В превью всё выглядит нормально, а скачанный файл может оказаться с наложенными буквами или нечитаемым текстом.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag orange">Процесс</span>
+          <h3>Не всегда быстрее с первого раза</h3>
+          <p>Иногда нужно две или три операции, чтобы бот понял задачу, контекст и принадлежность задач к нужным блокам.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag violet">Лимиты</span>
+          <h3>Режимы и генерации съедают ресурс</h3>
+          <p>Длинные цели, визуальные итерации и много согласований быстро тратят лимиты и время.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag blue">Доступы</span>
+          <h3>VPN, подписки и права мешают работе</h3>
+          <p>Часть сервисов нестабильна без VPN, часть сложно оплачивать, Codex может упираться в права на папки.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag sage">Качество</span>
+          <h3>Экспертность нельзя делегировать полностью</h3>
+          <p>Медицина, научные темы, TOV, цифры, экспертные вопросы и материалы для учеников требуют человеческой проверки.</p>
+        </article>
+
+        <article class="card compact wide">
+          <span class="tag dark">Гигиена</span>
+          <h3>Перегрев от многозадачности</h3>
+          <p>ИИ создаёт поток идей и задач. Кажется, что три процесса идут быстрее, но мозгу тяжелее переключаться между ними.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag dark">Контекст</span>
+          <h3>Слишком много уточнений может запутать</h3>
+          <p>Особенно в визуале. Чем больше точечных правок, тем выше риск, что модель начнёт чинить одно и ломать другое.</p>
+        </article>
+      </div>
+    </section>
+
+    <section id="solutions">
+      <div class="section-head">
+        <h2>Идеи, как решать</h2>
+        <p class="section-note">Не внедрять “ИИ вообще”, а снять конкретные блокеры из встречи.</p>
+      </div>
+      <div class="split">
+        <article class="callout">
+          <h3>Базовое правило: сначала рамка, потом производство</h3>
+          <p>Перед большой задачей просим нейронку не делать сразу, а задать вопросы, предложить план и только после согласования переходить к выполнению.</p>
+          <div class="mini">
+            <div class="mini-card"><b>1</b>Дай контекст</div>
+            <div class="mini-card"><b>2</b>Попроси вопросы</div>
+            <div class="mini-card"><b>3</b>Согласуй план</div>
+            <div class="mini-card"><b>4</b>Запусти выполнение</div>
+          </div>
+        </article>
+
+        <div class="grid">
+          <article class="card compact">
+            <span class="tag rose">Шаблоны</span>
+            <h3>Собрать базу удачных запросов</h3>
+            <p>Только реальные шаблоны, которые сработали: вход, запрос, выход, где проверять.</p>
+          </article>
+
+          <article class="card compact">
+            <span class="tag blue">Распределение</span>
+            <h3>Развести задачи по режимам</h3>
+            <p>Chat для быстрого, Work для облака и документов, Codex для файлов, HTML, GitHub и браузера.</p>
+          </article>
+        </div>
+      </div>
+
+      <div class="grid" style="margin-top:14px">
+        <article class="card compact">
+          <span class="tag sage">Проверка</span>
+          <h3>Визуал смотреть в финальном файле</h3>
+          <p>Открывать скачанный файл, проверять качество, читаемость, размер и текст. Превью не считать финалом.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag orange">Голос</span>
+          <h3>Нормализовать голосовой ввод</h3>
+          <p>Использовать его для длинного контекста, обратной связи, правок и объяснения задачи без долгого набора.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag violet">Рутина</span>
+          <h3>Собрать список раздражающих задач</h3>
+          <p>Каждому выбрать одну или две задачи, которые тормозят, и попробовать передать их ИИ.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag dark">Экспертиза</span>
+          <h3>Экспертные материалы не выпускать напрямую</h3>
+          <p>Вопросы экспертам, медицина, научные темы и TOV проходят через ответственного человека.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag rose">Лимиты</span>
+          <h3>Ставить лимит на итерации</h3>
+          <p>Если правки зациклились, остановиться, переформулировать задачу или вернуться к ручной доработке.</p>
+        </article>
+
+        <article class="card compact">
+          <span class="tag blue">Доступы</span>
+          <h3>Отдельно разобрать технические блокеры</h3>
+          <p>Права Codex на Mac, сохранение файлов, VPN, подписки, доступы к Google Docs, GitHub и внутренним кабинетам.</p>
+        </article>
+      </div>
+    </section>
+
+    <footer class="footer">
+      Составлено по расшифровке мини-синка команды #SEKTA о нейронках. Формат: карточки для быстрого просмотра в браузере.
+    </footer>
+  </main>
+</body>
+</html>
